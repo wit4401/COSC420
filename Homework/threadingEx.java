@@ -1,29 +1,53 @@
 // Homework 02
 // Will Townsend
-// 
+//
 // 09-09-2022
 
-public class hw02 extends Thread {
-  public Thread t1, t2;
+class FactorialThread extends Thread {
+  
+  private Thread t;
+  private String tname;
+  
+  FactorialThread(String name){
+      tname = name;
+      System.out.println("Creating " + tname);
+  }
+
   public void run(){
 
       int val = 1;
+
+      System.out.println("Running " + tname);
       
       for(int i = 1; i <= 5; i++){
         
         val *= i;
-        System.out.println( this.getName() + ":" + i + "! = " + val);
+        System.out.println( tname + ":" + i + "! = " + val);
       
       }
-      this.sleep(50);
+
+      System.out.println(tname+" Exiting...");
   }
 
-  public void main(String args[]){
+  public void start(){
+      System.out.println("Starting " + tname);
+      if(t==null){
 
-    t1 = new Thread(this,"Thread1");
-    t2 = new Thread(this,"Thread2");
-    t1.start();
-    t2.start();
+         t = new Thread(this, tname);
+         t.start();
+      }
+  }
+
+}
+
+public class threadingEx {
+   public static void main(String args[]){
+
+      FactorialThread ft1 = new FactorialThread("Thread1");
+      ft1.start();
+
+      FactorialThread ft2 = new FactorialThread("Thread2");
+      ft2.start();
   }
 }
 
