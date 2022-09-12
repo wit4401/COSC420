@@ -1,0 +1,18 @@
+initialIndex = the first index for processor p
+endIndex = the final index for processor p
+max = a min integer
+for(i = initialIndex; initialIndex <= endIndex; i++)
+    if(arr[initialIndex] > max)
+        max = arr[initialIndex]
+
+if (current process # % n/p == 0)
+    recieve max nums from above until processes
+    store in arr repeat process
+else
+    send max num to lowest process # multiple
+    return 0
+    
+    
+    
+Formula for number of communications:
+Log(p)
