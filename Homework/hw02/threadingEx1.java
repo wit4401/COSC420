@@ -18,12 +18,16 @@ class FactorialThread extends Thread {
       int val = 1;
 
       System.out.println("Running " + tname);
-      
+      try{
       for(int i = 1; i <= 5; i++){
         
         val *= i;
         System.out.println( tname + ":" + i + "! = " + val);
+        Thread.sleep(1000);
       
+      }
+   } catch(InterruptedException e){
+         System.out.println(tname + "Interrupted");
       }
 
       System.out.println(tname+" Exiting...");
@@ -40,7 +44,7 @@ class FactorialThread extends Thread {
 
 }
 
-public class threadingEx {
+public class threadingEx1 {
    public static void main(String args[]){
 
       FactorialThread ft1 = new FactorialThread("Thread1");
