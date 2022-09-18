@@ -1,10 +1,14 @@
-// Will Townsned
-//
-// A second threading example adding numbers up to n with 5 threads
-// a little more complex than threadingEx1.java
+/* 
+ * Will Townsned
+ * 
+ * A second threading example adding numbers up to n with 5 threads
+ * a little more complex than threadingEx1.java
+ * 
+ * Unfinished Program
+*/
 import  java.util.Scanner;
 
-class additionThread implements Runnable{
+class additionThread extends Thread{
     private String tname;
     private Thread t;
     private int start, end;
@@ -20,13 +24,13 @@ class additionThread implements Runnable{
     public void run(){
         System.out.println("Running Thread " + tname);
         try{
-            for(int i=start;start<=end;i++){
+            for(int i=start;i<=end;i++){
                 sum+=i;
-                Thread.sleep(50);
             }
-        }catch(InterruptedException e){
-            System.out.println("Thread " + tname + " Interrupted");
-        }
+            Thread.sleep(1000);
+        }catch(InterruptedException e){System.out.println("Thread " + tname + " Interrupted");}
+        
+        System.out.println("Thread " + tname + " Exiting");
     }
 
     public void start(){
@@ -34,6 +38,9 @@ class additionThread implements Runnable{
         if (t==null){
             t = new Thread(this, tname);
             t.start();
+            try{
+                t.join();
+            }catch(InterruptedException e){System.out.println("Failed to join Thread");}
         }
     }
 }
@@ -41,14 +48,16 @@ class additionThread implements Runnable{
 public class threadingEx2 {
     public static void  main(String args[]){
         int finalSum = 0;
-        int interval;
         Scanner obj = new Scanner(System.in);
         additionThread t1,t2,t3,t4,t5;
 
         System.out.print("Enter a number: ");
         int n = obj.nextInt();
-        interval=n/5;
-        if(n%5==0){
+        
+        int interval=n/5;
+        int remainder = n%5;
+        
+        if(remainder==0){
             t1 = new additionThread("01", 1, interval);
             t2 = new additionThread("02", interval+1, interval*2);
             t3 = new additionThread("03", (interval*2)+1, interval*3);
@@ -64,9 +73,8 @@ public class threadingEx2 {
             System.out.println("Final Sum: " + finalSum);
         }
         else{
-            
-            finalSum = t1.sum+t2.sum+t3.sum+t4.sum+t5.sum;
-            System.out.println("Final Sum: " + finalSum);
+            //finalSum = t1.sum+t2.sum+t3.sum+t4.sum+t5.sum;
+            //System.out.println("Final Sum: " + finalSum);
         }
 
         obj.close();
