@@ -23,12 +23,9 @@ class additionThread extends Thread{
 
     public void run(){
         System.out.println("Running Thread " + tname);
-        try{
-            for(int i=start;i<=end;i++){
-                sum+=i;
-            }
-            Thread.sleep(1000);
-        }catch(InterruptedException e){System.out.println("Thread " + tname + " Interrupted");}
+        for(int i=start;i<=end;i++){
+        	sum+=i;
+        }
         
         System.out.println("Thread " + tname + " Exiting");
     }
@@ -59,14 +56,18 @@ public class threadingEx2 {
         
         if(remainder==0){
             t1 = new additionThread("01", 1, interval);
-            t2 = new additionThread("02", interval+1, interval*2);
-            t3 = new additionThread("03", (interval*2)+1, interval*3);
-            t4 = new additionThread("04", (interval*3)+1, interval*4);
-            t5 = new additionThread("05", (interval*4)+1, interval*5);
             t1.start();
+            
+            t2 = new additionThread("02", interval+1, interval*2);
             t2.start();
+            
+            t3 = new additionThread("03", (interval*2)+1, interval*3);
             t3.start();
+            
+            t4 = new additionThread("04", (interval*3)+1, interval*4);
             t4.start();
+            
+            t5 = new additionThread("05", (interval*4)+1, interval*5);
             t5.start();
 
             finalSum = t1.sum+t2.sum+t3.sum+t4.sum+t5.sum;

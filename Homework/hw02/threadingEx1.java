@@ -1,57 +1,68 @@
 // Homework 02
 // Will Townsend
 //
-// 09-09-2022
+// Simple program initializes two threads to 
+// adds the numbers 1 - 10 together and prints a
+// final sum
 
-class FactorialThread extends Thread {
+//creation of the class FactorialThread which extends the thread class
+class AdditionThread extends Thread {
   
-  private Thread t;
-  private String tname;
+  private Thread t; // define our thread t in our class
+  private String tname; // variable for the name of our String
+  private int s,e;
+  public int result=0;
   
-  FactorialThread(String name){
+  // Constructor for our object
+  // assigns name for thread
+  AdditionThread(String name,int start,int end){
       tname = name;
+      s=start;
+      e=end;
       System.out.println("Creating " + tname);
   }
 
+  //actual function of each thread
   public void run(){
-
-      int val = 1;
-
       System.out.println("Running " + tname);
       try{
-      for(int i = 1; i <= 5; i++){
-        
-        val *= i;
-        System.out.println( tname + ":" + i + "! = " + val);
-        Thread.sleep(1000);
-      
-      }
-   } catch(InterruptedException e){
+         for(int i = s; i <= e; i++){
+            result += i;
+            Thread.sleep(50);
+         }
+   } catch(InterruptedException e){ //catches interruption of the thread run()
          System.out.println(tname + "Interrupted");
       }
-
       System.out.println(tname+" Exiting...");
   }
 
   public void start(){
       System.out.println("Starting " + tname);
+      //creates the actual thread, t
       if(t==null){
-
-         t = new Thread(this, tname);
-         t.start();
+         t = new Thread(this, tname);// initializes the thread t of the object
+         t.start(); //starts the function of the thread defined by run()
+         try{
+            t.join();//joins thread to sychronize them
+         }catch(Exception e){System.out.println("Failed to join thread");}
       }
   }
-
 }
 
+// main class file
 public class threadingEx1 {
+   // main program to be run
    public static void main(String args[]){
 
-      FactorialThread ft1 = new FactorialThread("Thread1");
+      //create first FactorialThread object
+      AdditionThread ft1 = new AdditionThread("Thread1",1,5);
       ft1.start();
 
-      FactorialThread ft2 = new FactorialThread("Thread2");
+      //create second FactorialThread object
+      AdditionThread ft2 = new AdditionThread("Thread2",6,10);
       ft2.start();
+
+      System.out.println("\nFinal Sum: " + (ft1.result+ft2.result));
   }
 }
 
@@ -91,7 +102,7 @@ class RunnableDemo implements Runnable {
    }
 }
 
-public class hw02 {
+public class threadingEx1 {
 
    public static void main(String args[]) {
       RunnableDemo R1 = new RunnableDemo( "Thread-1");
@@ -136,7 +147,7 @@ class ThreadDemo extends Thread {
    }
 }
 
-public class hw02 {
+public class threadingEx1 {
 
    public static void main(String args[]) {
       ThreadDemo T1 = new ThreadDemo( "Thread-1");
