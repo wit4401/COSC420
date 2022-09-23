@@ -25,16 +25,9 @@ class AdditionThread extends Thread {
 
   //actual function of each thread
   public void run(){
-      //System.out.println("Running " + tname);
-      try{
-         for(int i = s; i <= e; i++){
-            result += i;
-            Thread.sleep(0);
-         }
-   } catch(InterruptedException e){ //catches interruption of the thread run()
-         System.out.println(tname + "Interrupted");
+      for(int i = s; i <= e; i++){
+         result += i;
       }
-      //System.out.println(tname+" Exiting...");
   }
 
   public void start(){
@@ -51,7 +44,7 @@ class AdditionThread extends Thread {
 }
 
 // main class file
-public class threadingEx {
+public class threadingEx2 {
    // main program to be run
    public static void main(String args[]){
       
@@ -60,11 +53,11 @@ public class threadingEx {
       */
       long begin = System.nanoTime();
       //create first FactorialThread object
-      AdditionThread ft1 = new AdditionThread("Thread1",1,25);
+      AdditionThread ft1 = new AdditionThread("Thread1",1,500000);
       ft1.start();
 
       //create second AdditionThread object
-      AdditionThread ft2 = new AdditionThread("Thread2",26,50);
+      AdditionThread ft2 = new AdditionThread("Thread2",500001,1000000);
       ft2.start();
 
       System.out.println("\nFinal Sum: " + (ft1.result+ft2.result));
@@ -76,27 +69,38 @@ public class threadingEx {
        */
       begin = System.nanoTime();
       //create first AdditionThread object
-      ft1 = new AdditionThread("Thread1",1,10);
+      ft1 = new AdditionThread("Thread1",1,200000);
       ft1.start();
 
       //create second AdditionThread object
-      ft2 = new AdditionThread("Thread2",11,20);
+      ft2 = new AdditionThread("Thread2",200001,400000);
       ft2.start();
 
       //create first AdditionThread object
-      AdditionThread ft3 = new AdditionThread("Thread3",21,30);
+      AdditionThread ft3 = new AdditionThread("Thread3",400001,600000);
       ft3.start();
 
       //create second AdditionThread object
-      AdditionThread ft4 = new AdditionThread("Thread4",31,40);
+      AdditionThread ft4 = new AdditionThread("Thread4",600001,800000);
       ft4.start();
 
       //create second AdditionThread object
-      AdditionThread ft5 = new AdditionThread("Thread5",41,50);
+      AdditionThread ft5 = new AdditionThread("Thread5",800001,1000000);
       ft5.start();
 
       System.out.println("\nFinal Sum: " + (ft1.result+ft2.result+ft3.result+ft4.result+ft5.result));
       end = System.nanoTime();
       System.out.println("5 Thread Runtime: " + ((end-begin)*0.000000001) + " sec");
+
+      int result = 0;
+      begin = System.nanoTime();
+      for(int i=1;i<1000000;i++){
+         result += i;
+      }
+
+      System.out.println("\nFinal Sum: " + result);
+      end = System.nanoTime();
+   
+      System.out.println("Serial Runtime: " + ((end-begin)*0.000000001) + " sec");
   }
 }
