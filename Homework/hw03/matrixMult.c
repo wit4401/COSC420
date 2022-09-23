@@ -13,9 +13,12 @@
 void *threadFunc(void *args){
 
 }
+
 int main(int argc, char *args[]){
     int A[5][5];
     int B[5][5];
     pthread_t thread1,thread2,thread3,thread4,thread5;
 
+    printf("Hello World!\n");
+    exit(0);
 }

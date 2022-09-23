@@ -4,7 +4,7 @@
 // Simple program initializes two threads to 
 // adds the numbers 1 - 10 together and prints a
 // final sum
-//creation of the class FactorialThread which extends the thread class
+//creation of the class AdditionThread which extends the thread class
 class AdditionThread extends Thread {
   
     private Thread t; // define our thread t in our class
@@ -46,13 +46,13 @@ class AdditionThread extends Thread {
     }
   }
   // main class file
-  public class threadingEx {
+  public class threadingEx1 {
      // main program to be run
      public static void main(String args[]){
-        //create first FactorialThread object
+        //create first AdditionThread object
         AdditionThread ft1 = new AdditionThread("Thread1",1,5);
         ft1.start();
-        //create second FactorialThread object
+        //create second AdditionThread object
         AdditionThread ft2 = new AdditionThread("Thread2",6,10);
         ft2.start();
         System.out.println("\nFinal Sum: " + (ft1.result+ft2.result));

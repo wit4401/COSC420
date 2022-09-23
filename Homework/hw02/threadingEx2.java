@@ -6,7 +6,7 @@
 // 50 using 2 threads and 5 threads to compare their
 // times and thus their efficiency and speed comparitevly
 
-//creation of the class FactorialThread which extends the thread class
+//creation of the class AdditionThread which extends the thread class
 class AdditionThread extends Thread {
   
   private Thread t; // define our thread t in our class
@@ -20,7 +20,6 @@ class AdditionThread extends Thread {
       tname = name;
       s=start;
       e=end;
-      //System.out.println("Creating " + tname);
   }
 
   //actual function of each thread
@@ -31,7 +30,6 @@ class AdditionThread extends Thread {
   }
 
   public void start(){
-      //System.out.println("Starting " + tname);
       //creates the actual thread, t
       if(t==null){
          t = new Thread(this, tname);// initializes the thread t of the object
@@ -52,7 +50,7 @@ public class threadingEx2 {
        * Testing the time with two threads
       */
       long begin = System.nanoTime();
-      //create first FactorialThread object
+      //create first AdditionThread object
       AdditionThread ft1 = new AdditionThread("Thread1",1,500000);
       ft1.start();
 
