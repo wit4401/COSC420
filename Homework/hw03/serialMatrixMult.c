@@ -1,7 +1,10 @@
 /*
- * Serial nxn Matrix Multiplication Program
- * to compare to the assigned parallel
- * version of the program
+ * Serial Matrix Multiplication Program
+ *
+ * Multiplies two random mxn matricies with the bounds of the matrix determined by the
+ * user. Each elemnet is a random number b/n 0 and 10
+ *
+ * Note: This is a Homework 3 extension to help me recall how to program matrix multiplication.
 */
 
 #include<stdio.h>
@@ -12,17 +15,19 @@ int main(int argc, char *args[]){
     int rows1,columns1,rows2,columns2;
     printf("Enter # of rows (Matrix 1): ");
     scanf("%d",&rows1);
-    printf("Enter # of columns (Matrix 2): ");
+    printf("Enter # of columns (Matrix 1): ");
     scanf("%d",&columns1);
 
-    printf("Enter # of rows (Matrix 1): ");
+    puts("");
+
+    printf("Enter # of rows (Matrix 2): ");
     scanf("%d",&rows2);
     printf("Enter # of columns (Matrix 2): ");
     scanf("%d",&columns2);
 
     if(rows2!=columns1){
-	puts("Cannot Multipy with given values.");
-	exit(1);
+	    puts("Cannot Multipy with given values.");
+	    exit(1);
     }
 
     int matA[rows1][columns1];
@@ -30,11 +35,11 @@ int main(int argc, char *args[]){
     int matResult[rows1][columns2];
     srand(time(NULL));
 
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++)
+    for(int i=0;i<rows1;i++){
+        for(int j=0;j<columns2;j++)
             matResult[i][j]=0;
     }
-    for(int i=0;i<columns1;i++){
+    for(int i=0;i<rows1;i++){
         for(int j=0;j<columns1;j++)
             matA[i][j]=rand()%11;
     }
@@ -46,11 +51,12 @@ int main(int argc, char *args[]){
 
     for(int i=0;i<rows1;i++){
         for(int j=0;j<columns2;j++){
-            for(int k=0;k<columns2;k++)
+            for(int k=0;k<columns1;k++)
                 matResult[i][j] += matA[i][k]*matB[k][j];
         }
     }
-    puts("Matrix A:");
+
+    puts("\nMatrix A:");
     for(int i=0;i<rows1;i++){
         for(int j=0;j<columns1;j++){
             printf("%d ",matA[i][j]);
