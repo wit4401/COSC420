@@ -2,3 +2,5 @@
 # Programming Assignment 1
 #
 # COSC 420
+
+print('Hello World')
