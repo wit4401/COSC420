@@ -6,66 +6,48 @@
 */
 #include<stdio.h>
 #include<stdlib.h>
+#include<unistd.h>
 #include<time.h>
 #include<pthread.h>
 
-struct Matricies{
+typedef struct Matricies{
     int A[5][5];
     int B[5][5];
     int C[5][5];
     int result[5][5];
     int temp[5][5];
-};
+}matMult;
+
+pthread_mutex_t lock;
+matMult matricies;
 
 void *threadFunc(void *args){
-    Matricies my_struct = *((Matricies*) args);
-    if(isZeroMat(my_struct.result)){
-        for(int i=0;i<5;i++){
-            for(int n=0;j<5;j++)
-
-        }
-    }
-    else{
-        for(int i=0;i<5;i++){
-            for(int n=0;j<5;j++)
-
-        }
-    }
+    sleep(1);
     return NULL;
 }
 
-int isZeroMat(Matricies mat_struct){
-    int ret;
-    for(int i=0;i<5;i++){
-        for(int n=0;j<5;j++){
-            if(mat_struct[i][j]!=0)
-                ret=0;
-        }
-    }
-    if(ret='\0')
-        ret=1;
-
-    return ret;
-}
-
 int main(int argc, char *args[]){
-    Matricies matMult;
     srand(time(NULL));
-
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            matMult.A[i][j]=rand()%11;
-            matMult.B[i][j]=rand()%11;
-            matMult.C[i][j]=rand()%11;
-            matMult.result[i][j]=0;
+    for(int i=0;i<5;i++){
+        for(int j=0;j<5;j++){
+            matricies.A[i][j]=rand()%11;
+            matricies.B[i][j]=rand()%11;
+            matricies.C[i][j]=rand()%11;
+            matricies.result[i][j]=matricies.temp[i][j]=0;
         }
     }
 
     pthread_t *threads = malloc(2*sizeof(pthread_t));
 
     for(int i=0;i<2;i++){
-        pthread_create(&threads[i],NULL,threadFunc,(void*)&matMult);
+        pthread_create(&threads[i],NULL,threadFunc,NULL);
         pthread_join(threads[i],NULL);
+    }
+
+    for(int i=0;i<5;i++){
+        for(int j=0;j<5;j++)
+            printf("%d ",matricies.temp[i][j]);
+        puts("");
     }
 
     pthread_exit(NULL);
