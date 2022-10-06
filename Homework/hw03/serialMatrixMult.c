@@ -10,72 +10,74 @@
 #include<stdio.h>
 #include<time.h>
 #include<stdlib.h>
+#define NUM 10
+#define NUM_MAT 10
+
+// defined struture that will hold all the matrix information
+// for easy access by the threading function
+typedef struct Matricies{
+    long long int matrixArr[NUM_MAT][NUM][NUM];// array houses the matricies to be calculated
+    long long int result[NUM][NUM]; // this will house the results of our calculations and be used in the next calculation
+    long long int temp[NUM][NUM]; // a temporary matrix to hold the result until we copy it over to the result matrix
+}matMult;
 
 int main(int argc, char *args[]){
-    int rows1,columns1,rows2,columns2;
-    printf("Enter # of rows (Matrix 1): ");
-    scanf("%d",&rows1);
-    printf("Enter # of columns (Matrix 1): ");
-    scanf("%d",&columns1);
-
-    puts("");
-
-    printf("Enter # of rows (Matrix 2): ");
-    scanf("%d",&rows2);
-    printf("Enter # of columns (Matrix 2): ");
-    scanf("%d",&columns2);
-
-    if(rows2!=columns1){
-	    puts("Cannot Multipy with given values.");
-	    exit(1);
-    }
-
-    int matA[rows1][columns1];
-    int matB[rows2][columns2];
-    int matResult[rows1][columns2];
+    clock_t begin,end;
+    begin=clock();
     srand(time(NULL));
-
-    for(int i=0;i<rows1;i++){
-        for(int j=0;j<columns2;j++)
-            matResult[i][j]=0;
+    matMult mat_struct;
+    for(int i=0;i<NUM;i++){
+        for(int j=0;j<NUM;j++)
+            mat_struct.result[i][j]=mat_struct.temp[i][j]=0;
     }
-    for(int i=0;i<rows1;i++){
-        for(int j=0;j<columns1;j++)
-            matA[i][j]=rand()%11;
-    }
-
-    for(int i=0;i<rows2;i++){
-        for(int j=0;j<columns2;j++)
-            matB[i][j]=rand()%11;
-    }
-
-    for(int i=0;i<rows1;i++){
-        for(int j=0;j<columns2;j++){
-            for(int k=0;k<columns1;k++)
-                matResult[i][j] += matA[i][k]*matB[k][j];
+    for(int h=0;h<NUM_MAT;h++){
+        for(int i=0;i<NUM;i++){
+            for(int j=0;j<NUM;j++)
+                mat_struct.matrixArr[h][i][j]=rand()%11;
         }
     }
 
-    puts("\nMatrix A:");
-    for(int i=0;i<rows1;i++){
-        for(int j=0;j<columns1;j++){
-            printf("%d ",matA[i][j]);
+    for(int i=0;i<NUM;i++){
+        for(int j=0;j<NUM;j++){
+            for(int k=0;k<NUM;k++)
+                mat_struct.result[i][j] += mat_struct.matrixArr[0][i][k]*mat_struct.matrixArr[1][k][j];
+        }
+    }
+
+    for(int h=2;h<NUM_MAT;h++){
+        for(int i=0;i<NUM;i++){
+            for(int j=0;j<NUM;j++){
+                for(int k=0;k<NUM;k++)
+                    mat_struct.temp[i][j] += mat_struct.result[i][k]*mat_struct.matrixArr[h][k][j];
+            }
+        }
+        for(int i=0;i<NUM;i++){
+            for(int j=0;j<NUM;j++){
+                mat_struct.result[i][j]=mat_struct.temp[i][j];
+                mat_struct.temp[i][j]=0;
+            }
+        }
+    }
+
+    for(int h=0;h<NUM_MAT;h++){
+        printf("Matrix %d:\n",h+1);
+        for(int i=0;i<NUM;i++){
+            for(int j=0;j<NUM;j++)
+                printf("%lld ",mat_struct.matrixArr[h][i][j]);
+            puts("");
         }
         puts("");
     }
-    puts("\nMatrix B:");
-    for(int i=0;i<rows2;i++){
-        for(int j=0;j<columns2;j++){
-            printf("%d ",matB[i][j]);
-        }
+
+    puts("Resulting Matrix:");
+    for(int i=0;i<NUM;i++){
+        for(int j=0;j<NUM;j++)
+            printf("%lld ",mat_struct.result[i][j]);
         puts("");
     }
-    puts("\nAxB:");
-    for(int i=0;i<rows1;i++){
-        for(int j=0;j<columns2;j++){
-            printf("%d ",matResult[i][j]);
-        }
-        puts("");
-    }
+    puts("");
+    end=clock();
+
+    printf("%f sec\n",(double)(end-begin)/CLOCKS_PER_SEC);
     exit(0);
 }
