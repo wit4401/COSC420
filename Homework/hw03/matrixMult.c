@@ -11,8 +11,8 @@
 #include<pthread.h>
 
 /* Note: These values are changed for all outputs in pdf */
-#define MATRIX_N 10 /*  size of the matrix  */
-#define NUM_MAT 10 /* number of matricies to be multiplied */
+#define MATRIX_N 100 /*  size of the matrix  */
+#define NUM_MAT 30 /* number of matricies to be multiplied */
 
 // defined struture that will hold all the matrix information
 // for easy access by the threading function
@@ -27,28 +27,26 @@ matMult matricies; //define the matrix stucture globally for easy access in thre
 
 void *threadFunc(void *args){
     int val = *((int *) args);
-    sem_wait(&sem);// causes thread to wait until sem_post is called with another thread
+    sem_wait(&sem);
     /*  beginning critical section  */
     if(val==1){ // if it is the first thread it will multiply the matricies in matrixArr[0] and matrixArr[1]
         for(int i=0;i<MATRIX_N;i++){
             for(int j=0;j<MATRIX_N;j++){
                 for(int k=0;k<MATRIX_N;k++)
-                    matricies.result[i][j]+=matricies.matrixArr[val-1][i][k]*matricies.matrixArr[val][k][j];
+                    matricies.result[i][j]=matricies.matrixArr[0][i][k];
             }
         }
     }
-    else{ //if any other thread it will multiply the results of the previous calculation with the next matrix in the array
-        for(int i=0;i<MATRIX_N;i++){
-            for(int j=0;j<MATRIX_N;j++){
-                for(int k=0;k<MATRIX_N;k++)
-                    matricies.temp[i][j]+=matricies.result[i][k]*matricies.matrixArr[val][k][j];
-            }
+    for(int i=0;i<MATRIX_N;i++){
+        for(int j=0;j<MATRIX_N;j++){
+            for(int k=0;k<MATRIX_N;k++)
+                matricies.temp[i][j]+=matricies.result[i][k]*matricies.matrixArr[val][k][j];
         }
-        for(int i=0;i<MATRIX_N;i++){
-            for(int j=0;j<MATRIX_N;j++){
-                matricies.result[i][j]=matricies.temp[i][j];
-                matricies.temp[i][j]=0;
-            }
+    }
+    for(int i=0;i<MATRIX_N;i++){
+        for(int j=0;j<MATRIX_N;j++){
+            matricies.result[i][j]=matricies.temp[i][j];
+            matricies.temp[i][j]=0;
         }
     }
     /* end of critical section */
@@ -58,8 +56,8 @@ void *threadFunc(void *args){
 
 int main(int argc, char *args[]){
     clock_t begin,end;
+    sem_init(&sem,0,1);
     srand(time(NULL)); // declares seed for our RNG
-    begin=clock();
     
     /* sets up the result and temporary matricies */
     for(int i=0;i<MATRIX_N;i++){
@@ -67,7 +65,6 @@ int main(int argc, char *args[]){
             matricies.result[i][j]=matricies.temp[i][j]=0;
         }
     }
-
     /* sets up all the matricies to be multiplied together */
     for(int h=0;h<NUM_MAT;h++){
         for(int i=0;i<MATRIX_N;i++){
@@ -75,40 +72,48 @@ int main(int argc, char *args[]){
                 matricies.matrixArr[h][i][j]=rand()%11;
         }
     }
-
+    
     /* creates an array of threads with NUM_MAT-1 threads */
     pthread_t *threads = malloc((NUM_MAT-1)*sizeof(pthread_t));
-    sem_init(&sem,0,1); //initalize the semaphore
-
+    
+    begin=clock();
     // loop creates/starts the threads using pthread_create and sychronizes them using pthread_join()
     for(int i=0;i<NUM_MAT-1;i++){
         int threadNum=i+1;
         pthread_create(&threads[i],NULL,threadFunc,(void*)&threadNum);
         pthread_join(threads[i],NULL);
     }
-
-    for(int h=0;h<NUM_MAT;h++){
-        printf("Matrix %d:\n",h+1);
-        for(int i=0;i<MATRIX_N;i++){
-            for(int j=0;j<MATRIX_N;j++)
-                printf("%lld ",matricies.matrixArr[h][i][j]);
-            puts("");
-        }
-        puts("");
-    }
-    puts("Resulting Matrix:");
-    for(int i=0;i<MATRIX_N;i++){
-        for(int j=0;j<MATRIX_N;j++)
-            printf("%lld ",matricies.result[i][j]);
-        puts("");
-    }
-    puts("");
-    
     end=clock();
-    printf("%f sec\n",(double)(end-begin)/CLOCKS_PER_SEC);
+    printf("Parallel Runtime: %f sec\n",(double)(end-begin)/CLOCKS_PER_SEC);
 
-    sem_destroy(&sem); // destroys the semaphore
-    pthread_exit(NULL);
+    sem_destroy(&sem);
+
+    // beginning of the serial program
+    begin=clock();
+    for(int i=0;i<MATRIX_N;i++){
+        for(int j=0;j<MATRIX_N;j++){
+            for(int k=0;k<MATRIX_N;k++)
+                matricies.result[i][j]=matricies.matrixArr[0][i][k];
+        }
+    }
+
+    for(int h=1;h<NUM_MAT;h++){
+        for(int i=0;i<MATRIX_N;i++){
+            for(int j=0;j<MATRIX_N;j++){
+                for(int k=0;k<MATRIX_N;k++)
+                    matricies.temp[i][j] += matricies.result[i][k]*matricies.matrixArr[h][k][j];
+            }
+        }
+        for(int i=0;i<MATRIX_N;i++){
+            for(int j=0;j<MATRIX_N;j++){
+                matricies.result[i][j]=matricies.temp[i][j];
+                matricies.temp[i][j]=0;
+            }
+        }
+    }
+    end=clock();
+    printf("Serial Runtime: %f sec\n",(double)(end-begin)/CLOCKS_PER_SEC);
+
     free(threads); //frees the thread pointer
     exit(0);
 }
