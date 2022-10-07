@@ -33,6 +33,12 @@ def piEstimate(tosses):
             circleHits+=1
     return 4*(circleHits/tosses)
 
+print('Enter # of Tosses: ',end='')
+tosses = input()
+
+print('Enter # of Threads: ',end='')
+threadNum = input()
+
 tests = [10,100,1000,10000,100000,1000000,10000000,100000000]
 for x in tests:
     begin = time.time()
