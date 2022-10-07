@@ -24,27 +24,58 @@ import matplotlib.pyplot as plt
 
 # the actual Monte Carlo to estimate pi (will eventually just return # of hits)
 def piEstimate(tosses):
+    global hits
     circleHits = 0
     for i in range(0,tosses,1):
         x = random.uniform(-1.0, 1.0)
         y = random.uniform(-1.0, 1.0)
-        test = x**2+y**2
+        test = math.pow(x,2) + math.pow(y,2)
         if test <= 1:
-            circleHits+=1
-    return 4*(circleHits/tosses)
+            circleHits += 1
+    hits += circleHits #add to global variable for parallel implementation
+    return circleHits # return vale for seial portion
 
-print('Enter # of Tosses: ',end='')
-tosses = input()
+if __name__=="__main__":
+    print('Enter # of Tosses: ',end='')
+    tosses = int(input())
+    print('Enter # of Threads: ',end='')
+    threadNum = int(input())
+    
+    delta = round(tosses/threadNum)
+    remainder = tosses%threadNum
+    
+    threads = []
+    # if statement for threads dividing evenly into the number of tosses
+    if remainder == 0:
+        # creates our thread list and assigns how many tosses to simulate
+        for i in range(0,threadNum,1):
+            threads.append(threading.Thread(target=piEstimate,args=(delta,)))
+    else: # if the threads do not divide evenly into number of tosses
+        arr = [] # initialize array for the number of tosses to be assigned to each thread
+        # apply delta to every index
+        for i in range(0,threadNum,1):
+            arr.append(delta)
+        # gets the correct number of tosses for each thread by dividing out the remainder
+        for i in range(0,remainder):
+            arr[i] += 1
+        #creates the threads
+        for i in range(0,threadNum,1):
+            threads.append(threading.Thread(target=piEstimate,args=(arr[i],)))
+    
+    hits = 0
+    begin = time.time() # stores current time
+    # start each respective thread and calls the join function to wait until all threads are complete
+    for x in threads:
+        x.start() 
+        x.join()
+    end = time.time() # stores time after execution
 
-print('Enter # of Threads: ',end='')
-threadNum = input()
+    print('Approximation for pi with {} tosses: {}'.format(tosses,4*(hits/tosses)))
+    print("Parallel Runtime: {} sec\n".format(end-begin))
 
-tests = [10,100,1000,10000,100000,1000000,10000000,100000000]
-for x in tests:
-    begin = time.time()
-    approx = piEstimate(x)
-    print('Monte Carlo ({}) {}'.format(x, approx))
-    print('Absolute Error {}'.format(abs(math.pi-approx)))
-    print('Runtime: {:5.5f} sec\n'.format(time.time()-begin))
+    beign=time.time()
+    result = 4*(piEstimate(tosses)/tosses)
+    end=time.time()
+    print('Approximation for pi with {} tosses: {}'.format(tosses,result))
+    print("Serial Runtime: {} sec".format(end-begin))
 
-print('\nActual Pi: {}'.format(math.pi))
