@@ -29,7 +29,7 @@ def piEstimate(tosses):
     for i in range(0,tosses,1):
         x = random.uniform(-1.0, 1.0)
         y = random.uniform(-1.0, 1.0)
-        test = math.pow(x,2) + math.pow(y,2)
+        test = x**2 + y**2
         if test <= 1:
             circleHits += 1
     hits += circleHits #add to global variable for parallel implementation
