@@ -20,7 +20,6 @@ import math
 import random
 import time
 import threading
-import matplotlib.pyplot as plt
 
 # the actual Monte Carlo to estimate pi (will eventually just return # of hits)
 def piEstimate(tosses):
