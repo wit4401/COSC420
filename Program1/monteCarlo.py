@@ -45,24 +45,25 @@ if __name__=="__main__":
     
     parallelTimes=[]
     serialTimes=[]
-    for i in range(0,100):
+    print('')
+    for i in range(0,10):
         threads = []
         # if statement for threads dividing evenly into the number of tosses
         if remainder == 0:
             # creates our thread list and assigns how many tosses to simulate
-            for i in range(0,threadNum,1):
+            for j in range(0,threadNum,1):
                 threads.append(threading.Thread(target=piEstimate,args=(delta,)))
         else: # if the threads do not divide evenly into number of tosses
             arr = [] # initialize array for the number of tosses to be assigned to each thread
             # apply delta to every index
-            for i in range(0,threadNum,1):
+            for j in range(0,threadNum,1):
                 arr.append(delta)
             # gets the correct number of tosses for each thread by dividing out the remainder
-            for i in range(0,remainder):
-                arr[i] += 1
+            for j in range(0,remainder):
+                arr[j] += 1
             #creates the threads
-            for i in range(0,threadNum,1):
-                threads.append(threading.Thread(target=piEstimate,args=(arr[i],)))
+            for j in range(0,threadNum,1):
+                threads.append(threading.Thread(target=piEstimate,args=(arr[j],)))
     
         hits = 0
         begin = time.time() # stores current time
@@ -70,6 +71,7 @@ if __name__=="__main__":
         for x in threads:
             x.start() 
             x.join()
+        print('parallel pi estimate #{}: {}'.format(i+1,4*hits/tosses))
         end = time.time() # stores time after execution
         parallelTimes.append(end-begin)
         #print('Approximation for pi with {} tosses: {}'.format(tosses,4*(hits/tosses)))
@@ -77,6 +79,7 @@ if __name__=="__main__":
 
         beign=time.time()
         result = 4*(piEstimate(tosses)/tosses)
+        print('serial pi estimate #{}: {}\n'.format(i+1,result))
         end=time.time()
         serialTimes.append(end-begin)
         #print('Approximation for pi with {} tosses: {}'.format(tosses,result))
