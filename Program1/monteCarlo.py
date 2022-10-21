@@ -74,16 +74,12 @@ if __name__=="__main__":
         print('parallel pi estimate #{}: {}'.format(i+1,4*hits/tosses))
         end = time.time() # stores time after execution
         parallelTimes.append(end-begin)
-        #print('Approximation for pi with {} tosses: {}'.format(tosses,4*(hits/tosses)))
-        #print("Parallel Runtime: {} sec\n".format(end-begin))
 
         beign=time.time()
         result = 4*(piEstimate(tosses)/tosses)
         print('serial pi estimate #{}: {}\n'.format(i+1,result))
         end=time.time()
         serialTimes.append(end-begin)
-        #print('Approximation for pi with {} tosses: {}'.format(tosses,result))
-        #print("Serial Runtime: {} sec".format(end-begin))
     
     serialSum=0
     for time in serialTimes:
