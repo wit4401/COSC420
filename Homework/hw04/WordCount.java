@@ -1,3 +1,14 @@
+/* 
+ * Homework 04: MapReduce with WordCount
+ * 
+ * All this code was not created by me (source:
+ * https://hadoop.apache.org/docs/stable/hadoop-
+ * mapreduce-client/hadoop-mapreduce-client-core
+ * /MapReduceTutorial.html#:~:text=WordCount%20is
+ * %20a%20simple%20application,installation%20(
+ * Single%20Node%20Setup).), however was modified 
+ * a bit to meet the requirements of the assignment.
+*/
 import java.io.IOException;
 import java.util.StringTokenizer;
 
