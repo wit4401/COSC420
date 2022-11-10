@@ -1,3 +1,10 @@
+/*
+ * This program completes the necessary tasks for the second programming assignment.
+ * Various comments on the functionalities of the different functions (Hadoop and Java).
+ *
+ * See COSC420 repository for more information...
+*/
+
 import java.io.IOException;
 import java.util.StringTokenizer;
 
