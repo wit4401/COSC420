@@ -20,18 +20,18 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class socialNetwork {
     public static class NodeMapper extends Mapper<>{
-        public void map(){
-
+        public void map(,,Context context){
+            
         }
     }
 
     public static class TripletReducer extends Reducer<>{
-        public void reduce(){
+        public void reduce(,,Context context){
 
         }
     }
 
-    public static void main(String argv[]){
+    public static void main(String[] argv){
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "social network");
         job.setJarByClass(socialNetwork.class);
