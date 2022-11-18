@@ -19,11 +19,26 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class socialNetwork {
-    public static class NodeMapper extends Mapper<Object,Text,IntWritable,IntWritable>{
+    public static class NodeMapper extends Mapper<Object,Text,Text,Text>{
         public void map(Object obj,Text friends,Context context)throws IOException, InterruptedException{
             String[] list = friends.toString().split(" ",0);
             for (int i=1;i<list.length;i++){
-                context.write(new IntWritable(Integer.parseInt(list[0])),new IntWritable(Integer.parseInt(list[i])));
+                context.write(new Text(list[0]), new Text(list[i]));
+            }
+        }
+    }
+
+    public static class PairMapper extends Mapper<Object,Text,IntWritable,IntWritable>{
+        public void map(Object key, Text friends,Context context)throws IOException, InterruptedException{
+            String[] list = friends.toString().split(" ",0);
+            String[] pairs = new String[2];
+            for(int i=1; i<list.length;i++){
+                for(int j=i+1;i<list.length;j++){
+                    String pair = list[i] + list[j];
+                    pairs[0] = list[0] + " " + list[i];
+                    pairs[1] = list[0] + " " + list[j];
+                    context.write(new Text(pair),new Text("(" + pairs[0] + ") (" + pairs[1] + ")"));
+                }
             }
         }
     }
