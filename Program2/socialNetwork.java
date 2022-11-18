@@ -33,11 +33,13 @@ public class socialNetwork {
             String[] list = friends.toString().split(" ",0);
             String[] pairs = new String[2];
             for(int i=1; i<list.length;i++){
-                for(int j=i+1;i<list.length;j++){
-                    String pair = list[i] + list[j];
-                    pairs[0] = list[0] + " " + list[i];
-                    pairs[1] = list[0] + " " + list[j];
-                    context.write(new Text(pair),new Text("(" + pairs[0] + ") (" + pairs[1] + ")"));
+                for(int j=i+1;i<list.length-1;j++){
+                    if (list[i].equals(list[j])==false){
+                        String pair = list[i] + " " + list[j];
+                        pairs[0] = list[0] + " " + list[i];
+                        pairs[1] = list[0] + " " + list[j];
+                        context.write(new Text(pair),new Text(pairs[0] + " " + pairs[1]));
+                    }
                 }
             }
         }
@@ -53,7 +55,7 @@ public class socialNetwork {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "social network");
         job.setJarByClass(socialNetwork.class);
-        job.setMapperClass(NodeMapper.class);
+        job.setMapperClass(PairMapper.class);
         job.setReducerClass(TripletReducer.class);
         job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(IntWritable.class);
