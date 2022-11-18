@@ -28,7 +28,7 @@ public class socialNetwork {
         }
     }
 
-    public static class PairMapper extends Mapper<Object,Text,IntWritable,IntWritable>{
+    public static class PairMapper extends Mapper<Object,Text,Text,Text>{
         public void map(Object key, Text friends,Context context)throws IOException, InterruptedException{
             String[] list = friends.toString().split(" ",0);
             String[] pairs = new String[2];
@@ -45,7 +45,7 @@ public class socialNetwork {
         }
     }
 
-    public static class TripletReducer extends Reducer<IntWritable,IntWritable,IntWritable,IntWritable>{
+    public static class TripletReducer extends Reducer<Text,Text,Text,Text>{
         public void reduce(IntWritable key,IntWritable value,Context context)throws IOException, InterruptedException{
             context.write(key,value);
         }
@@ -57,8 +57,8 @@ public class socialNetwork {
         job.setJarByClass(socialNetwork.class);
         job.setMapperClass(PairMapper.class);
         job.setReducerClass(TripletReducer.class);
-        job.setOutputKeyClass(IntWritable.class);
-        job.setOutputValueClass(IntWritable.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
