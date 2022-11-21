@@ -46,7 +46,7 @@ public class socialNetwork {
                 for (int i=1;i<list.length;i++){
                     edge=friendList[0] + " " + friendList[i];
                     if(compare.equals(edge))
-                        context.write(new Text("<"+userId+","+friendList[0]+","+friendList[i]+">"),null);
+                        context.write(new Text("<"+userId+","+friendList[0]+","+friendList[i]+">"),NullWritable.get());
                 }
             }
         }
