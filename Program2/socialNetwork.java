@@ -24,7 +24,7 @@ public class socialNetwork {
         public void map(Object obj,Text friends,Context context)throws IOException, InterruptedException{
             String[] list = friends.toString().split(" ",0);
             String[] pairs = new String[2];
-            for(int i=1; i<list.length;i++){
+            for(int i=1;i<list.length;i++){
                 for(int j=i+1;j<list.length;j++){
                     String pair = list[i] + " " + list[j];
                     pairs[0] = list[0] + " " + list[i];
@@ -43,7 +43,7 @@ public class socialNetwork {
             for (Text list : values){
                 String[] friendList = list.toString().split(" ",0);
                 String edge;
-                for (int i=0;i<list.length-1;i++){
+                for (int i=1;i<list.length;i++){
                     edge=friendList[0] + " " + friendList[i];
                     if(compare.equals(edge))
                         context.write(new Text("<"+userId+","+friendList[0]+","+friendList[i]+">"),null);
