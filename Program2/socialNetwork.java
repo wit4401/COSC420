@@ -12,7 +12,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -26,27 +25,31 @@ public class socialNetwork {
             String[] pairs = new String[2];
             for(int i=1;i<list.length;i++){
                 for(int j=i+1;j<list.length;j++){
-                    String pair = list[i] + " " + list[j];
-                    pairs[0] = list[0] + " " + list[i];
-                    pairs[1] = list[0] + " " + list[j];
-                    context.write(new Text(pair + "=" + pairs[0] + " " + pairs[1]), friends);
+                    String pair = list[i] + list[j];
+                    pairs[0] = list[0] + list[i];
+                    pairs[1] = list[0] +list[j];
+                    String key="";
+                    for(int k=1;k<list.length;k++){
+                        key+=list[0]+list[k];
+                        if(i!=list.length-1)
+                            key+=" ";
+                    }
+                    context.write(new Text(key),new Text(pair + "=" + pairs[0] + " " + pairs[1]));
                 }
             }
         }
     }
 
-    public static class TripletReducer extends Reducer<Text,Text,Text,NullWritable>{
-        public void reduce(Text key,Iterable<Text> values,Context context)throws IOException, InterruptedException{
-            String[] edgeRelation = new key.toString().split("=",0);
-            String compare = edgeRelation[0];
-            String userId = edgeRelation[1].substring(1,2);
-            for (Text list : values){
-                String[] friendList = list.toString().split(" ",0);
-                String edge;
-                for (int i=1;i<list.length;i++){
-                    edge=friendList[0] + " " + friendList[i];
-                    if(compare.equals(edge))
-                        context.write(new Text("<"+userId+","+friendList[0]+","+friendList[i]+">"),NullWritable.get());
+    public static class TripletReducer extends Reducer<Text,Text,Text,Text>{
+        public void reduce(Iterable<Text> keys,Text value,Context context)throws IOException, InterruptedException{
+            String[] edges = value.toString().split("=",0);
+            String compare = edges[0];
+            String userId = edges[1].substring(1,2);
+            for (Text edgeList : keys){
+                String[] friendList = edgeList.toString().split(" ",0);
+                for(int i=0;i<friendList.length;i++){
+                    if(compare.equals(friendList[i]))
+                        context.write(new Text("<"+userId+","+friendList[0]+","+friendList[i]+">"),new Text(" "));
                 }
             }
         }
@@ -60,7 +63,7 @@ public class socialNetwork {
         job1.setMapperClass(PairMapper.class);
         job1.setReducerClass(TripletReducer.class);
         job1.setOutputKeyClass(Text.class);
-        job1.setOutputValueClass(NullWritable.class);
+        job1.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job1, new Path(args[0]));
         FileOutputFormat.setOutputPath(job1, new Path(args[1]));
         
