@@ -29,7 +29,7 @@ public class socialNetwork {
                     String pair = list[i] + " " + list[j];
                     pairs[0] = list[0] + " " + list[i];
                     pairs[1] = list[0] + " " + list[j];
-                    context.write(new Text(pair + "=" + pairs[0] + " " + pairs[1]), new Text(friends));
+                    context.write(new Text(pair + "=" + pairs[0] + " " + pairs[1]), friends);
                 }
             }
         }
