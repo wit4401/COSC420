@@ -30,9 +30,10 @@ public class socialNetwork {
                     pairs[1] = list[0] +list[j];
                     String key="";
                     for(int k=1;k<list.length;k++){
-                        key+=list[0]+list[k];
-                        if(i!=list.length-1)
-                            key+=" ";
+                        if(list[0]<list[k])
+                            key+=list[0]+list[k];
+                            if(i!=list.length-1)
+                                key+=" ";
                     }
                     context.write(new Text(key),new Text(pair + "=" + pairs[0] + " " + pairs[1]));
                 }
@@ -45,11 +46,11 @@ public class socialNetwork {
             String[] edges = value.toString().split("=",0);
             String compare = edges[0];
             String userId = edges[1].substring(1,2);
-            for (Text edgeList : keys){
-                String[] friendList = edgeList.toString().split(" ",0);
+            while (keys.hasNext()){
+                String[] friendList = keys.next().toString().split(" ",0);
                 for(int i=0;i<friendList.length;i++){
                     if(compare.equals(friendList[i]))
-                        context.write(new Text("<"+userId+","+friendList[0]+","+friendList[i]+">"),new Text(" "));
+                        context.write(new Text("<"+userId+","+friendList[0]+","+friendList[i]+">"), new Text(""));
                 }
             }
         }
