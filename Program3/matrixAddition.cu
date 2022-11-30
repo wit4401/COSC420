@@ -4,10 +4,11 @@
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<time.h>
-#define SIZE 25
+#define SIZE 10000
+#define GRID 10
 
 __global__ void matrix_addition(int *a,int *b, int *res,int n){
-    int i = threadIdx.x;
+    int i = threadIdx.x+(blockDim.x*blockIdx.x);
     if (i<n)
         res[i] = a[i]+b[i];
 }
@@ -15,7 +16,7 @@ __global__ void matrix_addition(int *a,int *b, int *res,int n){
 void printMatrix(int *mat, int len_row){
     int multiple=1;
     for (int i=0;i<SIZE;i++){
-        if(i == (multiple*len_row)){
+        if(i == (multiple*len_row)-1){
             printf("%d\n",mat[i]);
             multiple++;
         }
@@ -26,27 +27,30 @@ void printMatrix(int *mat, int len_row){
 
 int main(int argc, char **argv){
     int *matA,*matB,*result;
+    int len=sqrt(SIZE);
     srand(time(NULL));
 
-    cudaMalloc(&matA,sizeof(int)*SIZE);
-    cudaMalloc(&matB,sizeof(int)*SIZE);
-    cudaMalloc(&result,sizeof(int)*SIZE);
+    cudaMallocManaged(&matA,SIZE*sizeof(int));
+    cudaMallocManaged(&matB,SIZE*sizeof(int));
+    cudaMallocManaged(&result,SIZE*sizeof(int));
 
     for(int i=0;i<SIZE;i++){
         matA[i]=rand()%101;
         matB[i]=rand()%101;
-        result[i]=0;
     }
 
-    matrix_addition<<<1,1>>>(matA,matB,result,SIZE);
+    dim3 grid_size(GRID);
+    dim3 block_size(SIZE/GRID);
+
+    matrix_addition<<<grid_size,block_size>>>(matA,matB,result,SIZE);
     cudaDeviceSynchronize();
 
-    len=sqrt(SIZE);
-    printMatrix(matA,SIZE,len);
-    puts("Plus");
-    printMatrix(matB,SIZE,len);
-    puts("Equals");
-    printMatrix(result,SIZE,len);
+    printMatrix(matA,len);
+    puts("\nPlus");
+    printMatrix(matB,len);
+    puts("\nEquals");
+    printMatrix(result,len);
+    puts("");
 
     cudaFree(matA);
     cudaFree(matB);
