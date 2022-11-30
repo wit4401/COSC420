@@ -14,13 +14,17 @@ __global__ void matrix_multiply(int *a,int *b, int *res){
 }
 
 int main(int argc, char **argv){
-    int matA*,matB*,result;
+    int *matA,*matB,*result;
 
     cudaMalloc(&matA,sizeof(int)*SIZE);
     cudaMalloc(&matB,sizeof(int)*SIZE);
+    cudaMalloc(&result,sizeof(int)*SIZE);
 
     matrix_multiply<<<1,1>>>(matA,matB,result);
-    
 
+    cudaFree(matA);
+    cudaFree(matB);
+    cudaFree(result);
+    
     return 0;
 }
