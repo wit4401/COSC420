@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<math.h>
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<time.h>
@@ -8,8 +9,7 @@
 __global__ void matrix_addition(int *a,int *b, int *res,int n){
     int i = threadIdx.x;
     if (i<n)
-        res = a[i]+b[i]
-    
+        res[i] = a[i]+b[i]
 }
 
 int main(int argc, char **argv){
@@ -26,7 +26,7 @@ int main(int argc, char **argv){
         result[i]=0;
     }
 
-    matrix_addition<<<1,1>>>(matA,matB,result);
+    matrix_addition<<<1,1>>>(matA,matB,result,SIZE);
 
     cudaFree(matA);
     cudaFree(matB);
