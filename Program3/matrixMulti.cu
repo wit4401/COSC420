@@ -7,12 +7,13 @@
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<time.h>
-#define SIZE 10000 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
-#define GRID 10 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
+#define SIZE 4 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
+#define GRID 1 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
 
 __global__ void matrix_multiply(int *a,int *b, int *res, int n){
     int row = blockIdx.y*blockDim.y+threadIdx.y;
     int col = blockIdx.x*blockDim.x+threadIdx.x;
+
     if(row<n&&col<n){
         int temp = 0;
         for(int i=0;i<n;i++)
@@ -40,9 +41,9 @@ int main(int argc, char **argv){
     srand(time(NULL));
 
     //allocate appropriate memory to each dynamic array
-    cudaMalloc(&matA,sizeof(int)*SIZE);
-    cudaMalloc(&matB,sizeof(int)*SIZE);
-    cudaMalloc(&result,sizeof(int)*SIZE);
+    cudaMallocManaged(&matA,sizeof(int)*SIZE);
+    cudaMallocManaged(&matB,sizeof(int)*SIZE);
+    cudaMallocManaged(&result,sizeof(int)*SIZE);
 
     // assigns random number to each index of the dynamic arrays to be added
     for(int i=0;i<SIZE;i++){
@@ -54,7 +55,7 @@ int main(int argc, char **argv){
     dim3 block_size(SIZE/GRID);//stores our block dimensions
 
     //call the kernel with the appropriate grid and block dimensions
-    matrix_multiply<<<grid_size,block_size>>>(matA,matB,result,SIZE);
+    matrix_multiply<<<grid_size,block_size>>>(matA,matB,result,len);
     cudaDeviceSynchronize();
 
     //print out results from computation
