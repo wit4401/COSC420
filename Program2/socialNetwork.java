@@ -4,9 +4,8 @@
  *
  * See COSC420 repository for more information...
 */
-import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -30,7 +29,6 @@ public class socialNetwork {
                     pairs[1] = list[0] +list[j];
                     String key="";
                     for(int k=1;k<list.length;k++){
-                        if(list[0]<list[k])
                             key+=list[0]+list[k];
                             if(i!=list.length-1)
                                 key+=" ";
@@ -46,11 +44,11 @@ public class socialNetwork {
             String[] edges = value.toString().split("=",0);
             String compare = edges[0];
             String userId = edges[1].substring(1,2);
-            while (keys.hasNext()){
-                String[] friendList = keys.next().toString().split(" ",0);
+            for (Text list : keys){
+                String[] friendList = list.toString().split(" ",0);
                 for(int i=0;i<friendList.length;i++){
                     if(compare.equals(friendList[i]))
-                        context.write(new Text("<"+userId+","+friendList[0]+","+friendList[i]+">"), new Text(""));
+                        context.write(new Text("<"+userId+","+friendList[i].substring(1,2)+","+friendList[i].substring(2)+">"), new Text(""));
                 }
             }
         }
@@ -59,7 +57,7 @@ public class socialNetwork {
     public static void main(String[] args)throws Exception{
         Configuration conf = new Configuration();
 
-        Job job1 = Job.getInstance(conf, "social network1");
+        Job job1 = Job.getInstance(conf, "social network");
         job1.setJarByClass(socialNetwork.class);
         job1.setMapperClass(PairMapper.class);
         job1.setReducerClass(TripletReducer.class);
