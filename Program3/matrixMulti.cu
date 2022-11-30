@@ -7,11 +7,18 @@
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<time.h>
-#define SIZE 10000
-#define GRID 10
+#define SIZE 10000 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
+#define GRID 10 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
 
 __global__ void matrix_multiply(int *a,int *b, int *res, int n){
-
+    int row = blockIdx.y*blockDim.y+threadIdx.y;
+    int col = blockIdx.x*blockDim.x+threadIdx.x;
+    if(row<n&&col<n){
+        int temp = 0;
+        for(int i=0;i<n;i++)
+            temp+=a[row*n+i]*b[i*n+col];
+        res[row*n+col]=temp;
+    }
 }
 
 /* Prints out the given matrix */
@@ -39,8 +46,8 @@ int main(int argc, char **argv){
 
     // assigns random number to each index of the dynamic arrays to be added
     for(int i=0;i<SIZE;i++){
-        matA[i]=rand()%101;
-        matB[i]=rand()%101;
+        matA[i]=rand()%11;
+        matB[i]=rand()%11;
     }
 
     dim3 grid_size(GRID); //stores our grid dimensions
