@@ -11,14 +11,14 @@
 #define GRID 1 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
 
 __global__ void matrix_multiply(int *a,int *b, int *res, int width){
-    int row = blockIdx.y*blockDim.y+threadIdx.y;
-    int col = blockIdx.x*blockDim.x+threadIdx.x;
+    int row = blockIdx.y*width+threadIdx.y;
+    int col = blockIdx.x*width+threadIdx.x;
+    int sum = 0;
 
-    if(row<SIZE&&col<SIZE){
-        int temp = 0;
+    if((row<SIZE) && (col<SIZE)){
         for(int i=0;i<width;i++)
-            temp+=a[row*width+i]*b[i*width+col];
-        res[row*width+col]=temp;
+            sum+=a[row*width+i]*b[i*width+col];
+        res[row*width+col]=sum;
     }
 }
 
@@ -60,7 +60,7 @@ int main(int argc, char **argv){
 
     //print out results from computation
     printMatrix(matA,len);
-    puts("\nPlus");
+    puts("\nMultiplied");
     printMatrix(matB,len);
     puts("\nEquals");
     printMatrix(result,len);
