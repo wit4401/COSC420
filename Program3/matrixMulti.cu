@@ -10,15 +10,15 @@
 #define SIZE 4 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
 #define GRID 1 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
 
-__global__ void matrix_multiply(int *a,int *b, int *res, int n){
+__global__ void matrix_multiply(int *a,int *b, int *res, int width){
     int row = blockIdx.y*blockDim.y+threadIdx.y;
     int col = blockIdx.x*blockDim.x+threadIdx.x;
 
-    if(row<n&&col<n){
+    if(row<SIZE&&col<SIZE){
         int temp = 0;
-        for(int i=0;i<n;i++)
-            temp+=a[row*n+i]*b[i*n+col];
-        res[row*n+col]=temp;
+        for(int i=0;i<width;i++)
+            temp+=a[row*width+i]*b[i*width+col];
+        res[row*width+col]=temp;
     }
 }
 
