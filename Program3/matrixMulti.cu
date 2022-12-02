@@ -7,12 +7,12 @@
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<time.h>
-#define SIZE 4 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
-#define GRID 1 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
+#define SIZE 10000 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
+#define GRID 300 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
 
 __global__ void matrix_multiply(int *a,int *b, int *res, int width){
-    int row = blockIdx.y*width+threadIdx.y;
-    int col = blockIdx.x*width+threadIdx.x;
+    int row = threadIdx.y+(width*blockIdx.y);
+    int col = threadIdx.x+(width*blockIdx.x);
     int sum = 0;
 
     if((row<SIZE) && (col<SIZE)){
@@ -51,8 +51,8 @@ int main(int argc, char **argv){
         matB[i]=rand()%11;
     }
 
-    dim3 grid_size(GRID); //stores our grid dimensions
-    dim3 block_size(SIZE/GRID);//stores our block dimensions
+    dim3 grid_size(GRID,GRID,GRID); //stores our grid dimensions
+    dim3 block_size(SIZE/GRID,SIZE/GRID,1);//stores our block dimensions
 
     //call the kernel with the appropriate grid and block dimensions
     matrix_multiply<<<grid_size,block_size>>>(matA,matB,result,len);
@@ -60,7 +60,7 @@ int main(int argc, char **argv){
 
     //print out results from computation
     printMatrix(matA,len);
-    puts("\nMultiplied");
+    puts("\nTimes");
     printMatrix(matB,len);
     puts("\nEquals");
     printMatrix(result,len);
