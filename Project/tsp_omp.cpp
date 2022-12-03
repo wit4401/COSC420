@@ -18,7 +18,7 @@ void set_weights(vector<vector<int>>&matrix){
     int n = matrix.size();
     for(int i=0;i<n;i++){
         for(int j=0;i<n;j++)
-            matrix[i][j]=rand()%11+1
+            matrix[i][j]=rand()%11+1;
         matrix[i][i]=0;
     }
 }
@@ -49,7 +49,7 @@ vector<int> curr_permutation(vector<int>&arr,long long fact){
             viter++;
         
         retval.push_back(*viter);
-        nodes.erase(viter)
+        nodes.erase(viter);
     }
     return retval;
 }
@@ -121,8 +121,16 @@ int main(int argc, char *argv[]){
     vector<vector<int>>cost_matrix(matrix_size,vector<int>(matrix_size,0));
     set_weights(cost_matrix);
 
+    for(int i=0;i<cost_matrix.size();i++){
+        for(int j=0;j<cost_matrix.size();j++){
+            cout<<cost_matrix[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+
     start=clock();
-    vector<int> result = tsp_omp(cost_matrix)
+    vector<int> result = tsp_omp(cost_matrix);
     end=clock();
 
     cout<<"Elapsed Time: "<<(double)(end-start)/CLOCKS_PER_SEC<<" sec\n";
