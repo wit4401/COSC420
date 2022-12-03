@@ -17,21 +17,21 @@ int vertices;
 void tsp(int **graph, int start_vertex, int n){
     vector<int> v;
     for(int i=0;i<n;i++){
-        if(start_vertex!=i)
+        if(start_vertex-1!=i)
             v.push_back(i);
     }
 
     int minimum = INT_MAX;
     
     while(next_permutation(v.begin(),v.end())){
-        int curr_vert=start_vertex;
+        int curr_vert=start_vertex-1;
         int curr_weight=0;
 
         for(int i=0;i<v.size();i++){
-            curr_weight+=graph[start_vertex][v[i]];
+            curr_weight+=graph[curr_vert][v[i]];
             curr_vert=v[i];
         }
-        curr_weight+=graph[curr_vert][start_vertex];
+        curr_weight+=graph[curr_vert][start_vertex-1];
         minimum=min(minimum,curr_weight);
     }
     cout<<"Minimum Path: "<<minimum<<endl;
@@ -41,10 +41,10 @@ int main(int argc, char **argv){
     int start;
     srand(time(0));
     
-    cout<<"Verticies for random graph: ";
+    cout<<"Verticies for random graph (n): ";
     cin>>vertices;
     
-    cout<<"Starting Node: ";
+    cout<<"Starting Node (1 to n): ";
     cin>>start;
 
     int **graph = new int*[vertices];
