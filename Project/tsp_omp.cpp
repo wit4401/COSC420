@@ -1,4 +1,7 @@
 #include<iostream>
+#include<algorithm>
+#include<vector>
+#include<set>
 #include<ctime>
 #include<stdlib.h>
 #include <omp.h>
@@ -17,7 +20,7 @@ void set_factorial_arr(){
 void set_weights(vector<vector<int>>&matrix){
     int n = matrix.size();
     for(int i=0;i<n;i++){
-        for(int j=0;i<n;j++)
+        for(int j=0;j<n;j++)
             matrix[i][j]=rand()%11+1;
         matrix[i][i]=0;
     }
@@ -61,7 +64,7 @@ int path_cost(vector<vector<int>>&cost_matrix,vector<int>&path){
     return cost;
 }
 
-vector<int> tsp_omp(vector<vector<int>>costs){
+void tsp_omp(vector<vector<int>>costs){
     int msize = costs.size();
     int min_val = INFINITE;
 
@@ -85,8 +88,8 @@ vector<int> tsp_omp(vector<vector<int>>costs){
             iter_thread++;
         }
         else
-            nodes=curr_permutation(nodes,id*(iter_thread+extra))
-
+            nodes=curr_permutation(nodes,thread_id*(iter_thread+mod));
+        int i=0;
         while(i<iter_thread){
             vector<int> temp_path = nodes;
             temp_path.push_back(0);
@@ -94,8 +97,8 @@ vector<int> tsp_omp(vector<vector<int>>costs){
             int cost = path_cost(costs,temp_path);
             #pragma omp critial
             {
-                if(cost<min_cost){
-                    min_cost=cost;
+                if(cost<min_val){
+                    min_val=cost;
                     retval=temp_path;
                 }
             }
@@ -104,14 +107,14 @@ vector<int> tsp_omp(vector<vector<int>>costs){
         }
     }
     cout<<"Min Path: ";
-    for(int i=0;i<retval.size();i++)
+    for(int i=0;i<retval.size()-1;i++)
         cout<<retval[i]<<" -> ";
-    cout<<retval[0]<<" ("<<min_cost<<")"<<endl;
+    cout<<retval[0]<<" ("<<min_val<<")"<<endl;
 }
 
 int main(int argc, char *argv[]){
-    int matrix_size = stio(argv[1]);
-    int num_of_threads =sti0(argv[2]);
+    int matrix_size = stoi(argv[1]);
+    int num_of_threads = stoi(argv[2]);
     clock_t start,end;
     srand(time(NULL));
 
@@ -130,7 +133,7 @@ int main(int argc, char *argv[]){
     cout<<endl;
 
     start=clock();
-    vector<int> result = tsp_omp(cost_matrix);
+    tsp_omp(cost_matrix);
     end=clock();
 
     cout<<"Elapsed Time: "<<(double)(end-start)/CLOCKS_PER_SEC<<" sec\n";
