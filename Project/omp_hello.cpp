@@ -12,9 +12,9 @@ int main(int argc,char *argv[]){
         int num_of_threads = omp_get_num_threads();
         #pragma omp critical
         {
-	    std::cout<<"Hello world from thread "<<threadId<<" of "<<num_of_threads<<std::endl;
+	        std::cout<<"Hello world from thread "<<threadId<<" of "<<num_of_threads<<std::endl;
             if(!flag){
-                std::cout<<"\nThread "<<threadId<<" wins!\n";
+                std::cout<<"Thread "<<threadId<<" wins!\n";
                 flag=true;
             }
             else
