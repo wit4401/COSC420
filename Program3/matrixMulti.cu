@@ -52,7 +52,7 @@ int main(int argc, char **argv){
     }
 
     dim3 grid_size(GRID); //stores our grid dimensions
-    dim3 block_size(GRID/SIZE);//stores our block dimensions
+    dim3 block_size(SIZE/GRID);//stores our block dimensions
 
     //call the kernel with the appropriate grid and block dimensions
     matrix_multiply<<<grid_size,block_size>>>(matA,matB,result,len);
