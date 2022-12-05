@@ -8,7 +8,7 @@
 #include<cuda_runtime.h>
 #include<time.h>
 #define SIZE 3*3 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
-#define GRID 1 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
+#define BLOCK_SIZE 1 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
 
 __global__ void matrix_multiply(int *a,int *b, int *res, int width){
     int row = threadIdx.y+(width*blockIdx.y);
@@ -37,7 +37,7 @@ void printMatrix(int *mat, int len_row){
 
 int main(int argc, char **argv){
     int *matA,*matB,*result;
-    int len=sqrt(SIZE);/* length of each row/column */
+    int len=sqrt(SIZE); /* length of each row/column */
     srand(time(NULL));
 
     //allocate appropriate memory to each dynamic array
@@ -45,14 +45,14 @@ int main(int argc, char **argv){
     cudaMallocManaged(&matB,sizeof(int)*SIZE);
     cudaMallocManaged(&result,sizeof(int)*SIZE);
 
-    // assigns random number to each index of the dynamic arrays to be added
+    // assigns random number to each index of the dynamic arrays to be multiplied
     for(int i=0;i<SIZE;i++){
         matA[i]=rand()%11;
         matB[i]=rand()%11;
     }
 
-    dim3 grid_size(GRID); //stores our grid dimensions
-    dim3 block_size(SIZE/GRID,SIZE/GRID,1);//stores our block dimensions
+    dim3 grid_size(floor((BLOCK_SIZE+SIZE)/BLOCK_SIZE)); //stores our grid dimensions
+    dim3 block_size(BLOCK_SIZE);//stores our block dimensions
 
     //call the kernel with the appropriate grid and block dimensions
     matrix_multiply<<<grid_size,block_size>>>(matA,matB,result,len);
