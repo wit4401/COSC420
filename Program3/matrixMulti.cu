@@ -7,8 +7,8 @@
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<time.h>
-#define SIZE 10000 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
-#define GRID 300 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
+#define SIZE 3*3 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
+#define GRID 1 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
 
 __global__ void matrix_multiply(int *a,int *b, int *res, int width){
     int row = threadIdx.y+(width*blockIdx.y);
@@ -17,8 +17,8 @@ __global__ void matrix_multiply(int *a,int *b, int *res, int width){
 
     if((row<SIZE) && (col<SIZE)){
         for(int i=0;i<width;i++)
-            sum+=a[row*width+i]*b[i*width+col];
-        res[row*width+col]=sum;
+            sum+=a[(row*width)+i]*b[(i*width)+col];
+        res[(row*width)+col]=sum;
     }
 }
 
@@ -51,7 +51,7 @@ int main(int argc, char **argv){
         matB[i]=rand()%11;
     }
 
-    dim3 grid_size(GRID,GRID,GRID); //stores our grid dimensions
+    dim3 grid_size(GRID); //stores our grid dimensions
     dim3 block_size(SIZE/GRID,SIZE/GRID,1);//stores our block dimensions
 
     //call the kernel with the appropriate grid and block dimensions
@@ -65,6 +65,7 @@ int main(int argc, char **argv){
     puts("\nEquals");
     printMatrix(result,len);
     puts("");
+
 
     //clean up memory
     cudaFree(matA);
