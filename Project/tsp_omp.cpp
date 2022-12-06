@@ -46,7 +46,7 @@ vector<int> curr_permutation(vector<int>&arr,long long fact){
         long long per_val=curr_val*(iter-1)/iter;
         fact-=per_val;
 
-        auto viter = nodes.begin();
+        vector::iterator viter = nodes.begin();
 
         for(int i=0;i<iter-1;i++)
             viter++;
@@ -70,7 +70,6 @@ void tsp_omp(vector<vector<int>>costs){
 
     vector<int> retval;
     vector<int> nodes;
-    
 
     long int k=factorial[msize-1];
 
@@ -121,7 +120,7 @@ int main(int argc, char *argv[]){
 
     set_factorial_arr();
     omp_set_num_threads(num_of_threads);
-    
+
     vector<vector<int>>cost_matrix(matrix_size,vector<int>(matrix_size,0));
     set_weights(cost_matrix);
 
