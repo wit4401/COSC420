@@ -46,7 +46,7 @@ vector<int> curr_permutation(vector<int>&arr,long long fact){
         long long per_val=curr_val*(iter-1)/iter;
         fact-=per_val;
 
-        vector::iterator viter = nodes.begin();
+        set::iterator viter = nodes.begin();
 
         for(int i=0;i<iter-1;i++)
             viter++;
