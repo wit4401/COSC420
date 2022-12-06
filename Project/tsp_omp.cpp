@@ -1,5 +1,4 @@
 #include<iostream>
-#include<iterator>
 #include<algorithm>
 #include<vector>
 #include<set>
@@ -49,7 +48,7 @@ vector<int> curr_permutation(vector<int>&arr,long long fact){
 
         auto viter = nodes.begin();
 
-        while(viter.next())
+        for(int i=0;i<iter-1;i++)
             viter++;
         
         retval.push_back(*viter);
