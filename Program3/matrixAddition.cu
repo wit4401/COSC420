@@ -3,7 +3,7 @@
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<time.h>
-#define SIZE 10000 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
+#define SIZE 100*100 /* Size of arrays (Size of matrix: "sqrt(SIZE) x sqrt(SIZE)" */
 #define GRID 10 /* Size of the grid (i.e. dimensions "Grid x Grid x Grid") */
 
 /* Our kernel, i.e. the instructions for each thread in this case adding together numbers in the same spot */
