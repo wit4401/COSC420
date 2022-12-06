@@ -48,7 +48,7 @@ vector<int> curr_permutation(vector<int>&arr,long long fact){
 
         auto viter = nodes.begin();
 
-        for(int i=0;i<iter-1;i++)
+        while(viter.next())
             viter++;
         
         retval.push_back(*viter);
