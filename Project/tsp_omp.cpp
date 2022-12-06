@@ -27,45 +27,7 @@ void set_weights(vector<vector<int>>&matrix){
     }
 }
 
-vector<int> curr_permutation(vector<int>&arr, long long n)
-{
-	int N = arr.size();
 
-	assert(n<=factorial[N]);
-
-	sort(arr.begin(),arr.end());
-	
-	set<int>st;
-	for(int x : arr)st.insert(x);
-
-	vector<int>ans;
-	
-	
-	for(int i=0;i<N;i++)
-	{
-		int cn = 1;
-		long long cval = factorial[N-1-i];
-		while(cval<n)
-		{
-			cn++;
-			cval=(long long)cn*cval;
-			cval=(long long)cval/(cn-1);
-		}
-
-		long long pval = cval*(cn-1)/cn;
-		n -= pval;
-		
-		auto it = st.begin();
-		
-		for(int i=0;i<cn-1;i++)it++;
-		ans.push_back(*it);
-		st.erase(it);
-	}
-
-	return ans;
-}
-
-/*
 vector<int> curr_permutation(vector<int>&arr,long long fact){
     int size = arr.size();
     sort(arr.begin(),arr.end());
@@ -77,8 +39,8 @@ vector<int> curr_permutation(vector<int>&arr,long long fact){
     vector<int> retval;
     for(int i=0;i<size;i++){
         int iter = 1;
-        long long curr_val = factorial[size-1-i];
-        while(iter<fact){
+        long long  = factorial[size-1-i];
+        while(curr_val<fact){
             iter++;
             curr_val=(long long)curr_val*iter;
             curr_val=(long long)curr_val/(iter-1);
@@ -96,7 +58,6 @@ vector<int> curr_permutation(vector<int>&arr,long long fact){
     }
     return retval;
 }
-*/
 
 int path_cost(vector<vector<int>>&cost_matrix,vector<int>&path){
     int cost = 0;
