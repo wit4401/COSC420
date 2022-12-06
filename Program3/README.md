@@ -1,7 +1,7 @@
 # Program 3: Matrix Operations with CUDA
 In mathematics, a matrix is a rectangular array of numbers, symbols, or expressions, arranged in rows and columns. The individual items in a matrix are called its elements or entries. There are a number of matrix operations including matrix addition, multiplication and transposition, and finding the inverse of a matrix, which have many application in scientific computation.  
 
-In this program, you will 
+In this program: 
 
 * Implement matrix addition in CUDA 
 
