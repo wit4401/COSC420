@@ -70,6 +70,7 @@ void tsp_omp(vector<vector<int>>costs){
 
     vector<int> retval;
     vector<int> nodes;
+    omp_set_num_threads(num_of_threads);
 
     long int k=factorial[msize-1];
 
@@ -118,7 +119,6 @@ int main(int argc, char *argv[]){
     clock_t start,end;
     srand(time(NULL));
 
-    omp_set_num_threads(num_of_threads);
     set_factorial_arr();
     
     vector<vector<int>>cost_matrix(matrix_size,vector<int>(matrix_size,0));
