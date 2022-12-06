@@ -27,7 +27,6 @@ void set_weights(vector<vector<int>>&matrix){
     }
 }
 
-
 vector<int> curr_permutation(vector<int>&arr,long long fact){
     int size = arr.size();
     sort(arr.begin(),arr.end());
@@ -39,7 +38,7 @@ vector<int> curr_permutation(vector<int>&arr,long long fact){
     vector<int> retval;
     for(int i=0;i<size;i++){
         int iter = 1;
-        long long  = factorial[size-1-i];
+        long long curr_val = factorial[size-1-i];
         while(curr_val<fact){
             iter++;
             curr_val=(long long)curr_val*iter;
